@@ -1,7 +1,7 @@
 CLI for fast.com written in Go
 
 ```sh
-$ go install github.com/ajinasokan/fast
+$ go install github.com/ajinasokan/fast@latest
 
 $ fast
 

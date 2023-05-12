@@ -1,5 +1,7 @@
 CLI for fast.com written in Go
 
+Download binary from [releases](https://github.com/ajinasokan/fast/releases) or build manually:
+
 ```sh
 $ go install github.com/ajinasokan/fast@latest
 

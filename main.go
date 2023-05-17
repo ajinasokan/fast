@@ -21,7 +21,24 @@ func main() {
 
 	// GET THE TOKEN
 
-	res, err := http.Get("https://fast.com/app-ed402d.js")
+	resOfHtml, err := http.Get("https://fast.com/index.html")
+	if err != nil {
+		log.Fatal("Unable to access fast.com", err)
+	}
+
+	html, err := io.ReadAll(resOfHtml.Body)
+	if err != nil {
+		log.Fatal("Unable to read from fast.com", err)
+	}
+	
+	rForScriptFileId := regexp.MustCompile(`src\=\"\/app-(.*?)\.js\"`)
+	scriptFileIdMatch := rForScriptFileId.FindStringSubmatch(string(html))
+	if (len(scriptFileIdMatch) == 0) {
+		log.Fatal("Unable to find js file. May be renamed from app-*.js pattern.")
+	}
+	scriptFileId := scriptFileIdMatch[1]
+	
+	res, err := http.Get("https://fast.com/app-" + scriptFileId + ".js")
 	if err != nil {
 		log.Fatal("Unable to access fast.com", err)
 	}
@@ -32,7 +49,11 @@ func main() {
 	}
 
 	r := regexp.MustCompile(`token\:\"(.*?)\"`)
-	token := r.FindStringSubmatch(string(h))[1]
+	tokenMatch := r.FindStringSubmatch(string(h))
+	if (len(tokenMatch) == 0) {
+		log.Fatal("Unable to find token in js file. May be renamed.")
+	}
+	token := tokenMatch[1]
 
 	// GET THE URLS
 
